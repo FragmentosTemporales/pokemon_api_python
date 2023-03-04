@@ -6,28 +6,64 @@ from sqlalchemy.orm import relationship
 from sqlalchemy import create_engine
 from eralchemy2 import render_er
 
-Base = declarative_base()
+Base = declarative_base()  
 
-class Person(Base):
-    __tablename__ = 'person'
-    # Here we define columns for the table person
-    # Notice that each column is also a normal Python instance attribute.
+class User(Base):
+    __tablename__='user'
     id = Column(Integer, primary_key=True)
-    name = Column(String(250), nullable=False)
+    name = Column(String(50), nullable=False)
+    last_name = Column(String(50), nullable=False)
+    email = Column(String(50), nullable=False)
+    password = Column(String(50), nullable=False)
+    favorite = relationship('favorite')
 
-class Address(Base):
-    __tablename__ = 'address'
-    # Here we define columns for the table address.
-    # Notice that each column is also a normal Python instance attribute.
+class Favorite(Base):
+    __tablename__='favorite'
     id = Column(Integer, primary_key=True)
-    street_name = Column(String(250))
-    street_number = Column(String(250))
-    post_code = Column(String(250), nullable=False)
-    person_id = Column(Integer, ForeignKey('person.id'))
-    person = relationship(Person)
+    pokemon_id = Column(Integer, ForeignKey('pokemon'))
+    name = Column(String(50), nullable=False)
+    id_user = Column(Integer, ForeignKey('user.id'))
+    
+class Pokemon(Base):
+    __tablename__='pokemon'
+    id = Column(Integer, primary_key=True)
+    name = Column(String(50), nullable=False)
+    ability = relationship('ability')
+    attack = relationship('attack')
+    
 
-    def to_dict(self):
-        return {}
+class Feature(Base):
+    __tablename__='feature'
+    id = Column(Integer, primary_key=True)
+    height = Column(Integer, nullable=False)
+    weight = Column(Integer, nullable=False)
+    pokemon_id = Column(Integer, ForeignKey('pokemon.id'))
+    pokemon = relationship('pokemon')
+
+class Ability(Base):
+    __tablename__='ability'
+    id = Column(Integer, primary_key=True)
+    ability = Column(String(50), nullable=False)
+    pokemon_id = Column(Integer, ForeignKey('pokemon.id'))
+
+class stat(Base):
+    __tablename__='stat'
+    id = Column(Integer, primary_key=True)
+    hp = Column(Integer, nullable=False)
+    attack = Column(Integer, nullable=False)
+    defense = Column(Integer, nullable=False)
+    special_attack = Column(Integer, nullable=False)
+    special_defense = Column(Integer, nullable=False)
+    speed = Column(Integer, nullable=False)
+    pokemon_id = Column(Integer, ForeignKey('pokemon.id'))
+    pokemon = relationship('pokemon')
+
+class Type(Base):
+    __tablename__='type'
+    id = Column(Integer, primary_key=True)
+    type = Column(String(50), nullable=False)
+    pokemon_id = Column(Integer, ForeignKey('pokemon.id'))
+
 
 ## Draw from SQLAlchemy base
 render_er(Base, 'diagram.png')
