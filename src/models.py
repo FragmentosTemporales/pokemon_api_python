@@ -29,7 +29,7 @@ class Pokemon(Base):
     id = Column(Integer, primary_key=True)
     name = Column(String(50), nullable=False)
     ability = relationship('ability')
-    attack = relationship('attack')
+    type = relationship('type')
     
 
 class Feature(Base):
